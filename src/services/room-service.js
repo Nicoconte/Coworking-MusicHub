@@ -11,10 +11,11 @@ const RoomService = function() {
             name: roomData.name,
             isPublic: roomData.isPublic,
             maxNumberOfParticipants: roomData?.maxNumberOfParticipants,
-            password: roomData?.password 
+            roomPassword: roomData?.password,
+            userId: roomData?.userId 
         })
 
-        return room ? room : null;
+        return room;
     }
 
     async function findByIdAsync(roomId) {
@@ -54,3 +55,5 @@ const RoomService = function() {
     }
 
 }
+
+module.exports = RoomService

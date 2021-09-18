@@ -1,18 +1,16 @@
 const Router = require("express").Router();
-const Validator = require('../helpers/validator-helper')();
-const RESPONSE_MESSAGE = require('../enums/response-message');
 const UserController = require('../controllers/user-controller')();
+const { 
+    UserRegisterRequestBodyValidator, 
+    UserLoginRequestBodyValidator 
+} = require('../validators/user-validator')
 
-Router.post('/user/register', (req, res) => {
+
+const RESPONSE_MESSAGE = require('../enums/response-message');
+
+Router.post('/user/register', UserRegisterRequestBodyValidator, (req, res) => {
     let userData = req.body;
-    
-    if (!Validator.hasFields(userData, ["username", "password"])) {
-        return res.send({
-            "status": false,
-            "reason": RESPONSE_MESSAGE.INCOMPLETE_BODY
-        })
-    } 
-    
+        
     UserController.register(userData).then(user => {
         if (!user) {
             return res.send({
@@ -29,15 +27,8 @@ Router.post('/user/register', (req, res) => {
 })
 
 
-Router.post('/user/login', (req, res) => {
+Router.post('/user/login', UserLoginRequestBodyValidator, (req, res) => {
     let userData = req.body;
-
-    if (!Validator.hasFields(userData, ["username", "password"])) {
-        return res.send({
-            "status": false,
-            "reason": RESPONSE_MESSAGE.INCOMPLETE_BODY
-        })
-    }
 
     UserController.login(userData).then(u => {
         if (!u) {
@@ -60,6 +51,5 @@ Router.post('/user/login', (req, res) => {
 })
 
 const UserRoutes = Router;
-
 
 module.exports = UserRoutes;

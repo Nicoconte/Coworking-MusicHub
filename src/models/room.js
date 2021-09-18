@@ -25,7 +25,7 @@ const Room = sequelize.define('room', {
     },
     roomPassword: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
     }
 })
 
