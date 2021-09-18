@@ -1,4 +1,5 @@
 const User = require('./user');
+const AuthToken = require('./authtoken');
 
 const Models = function() {
 
@@ -7,6 +8,7 @@ const Models = function() {
      */
     async function init() {
         User.sync();
+        AuthToken.sync();
     }
 
     return {

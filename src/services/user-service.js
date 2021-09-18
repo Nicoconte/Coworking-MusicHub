@@ -30,9 +30,23 @@ const UserService = function () {
         return user ? true : false; 
     }
 
+    async function findByUsernameAndPasswordAsync(userData) {
+        let user = await Users.findOne({
+            where: {
+                username: userData.username,
+                password: userData.password
+            }
+        }).catch(err => {
+            console.log("FindByUsernameAndPassword Error: ", err);
+        })
+
+        return user ? user : null;
+    }
+
     return {
         "createAsync": createAsync,
-        "existsAsync": existsAsync
+        "existsAsync": existsAsync,
+        "findByUsernameAndPasswordAsync": findByUsernameAndPasswordAsync
     }
 
 }
