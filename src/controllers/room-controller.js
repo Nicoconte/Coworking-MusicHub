@@ -20,11 +20,26 @@ const RoomController = function() {
         return await roomService.findByIdAsync(roomId) ?? null
     }
 
+    async function addNewParticipantToRoom(roomId, userId) {
+        return await roomService.assignUserToRoomAsync(roomId, userId);
+    }
+
+    async function deleteRoom(roomId, userId) {
+        return await roomService.deleteAsync(roomId, userId)
+    }
+
+    async function updateRoom(roomId, userId, roomData) {
+        return await roomService.updateAsync(roomId, userId, roomData);
+    }
+
     return {
         "createRoom": createRoom,
         "listUserRoom": listUserRoom,
         "listPublicRoom": listPublicRoom,
-        "getRoom": getRoom
+        "getRoom": getRoom,
+        "addNewParticipantToRoom": addNewParticipantToRoom,
+        "deleteRoom": deleteRoom,
+        "updateRoom": updateRoom
     }
 }
 
