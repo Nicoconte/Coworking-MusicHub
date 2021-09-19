@@ -12,14 +12,18 @@ const RoomController = function() {
         return await roomService.listUserRoomsAsync(userId) ?? null;
     }
 
+    async function listPublicRoom() {
+        return await roomService.listPublicRoomsAsync() ?? null
+    }
+
     async function getRoom(roomId) {
         return await roomService.findByIdAsync(roomId) ?? null
     }
 
-
     return {
         "createRoom": createRoom,
         "listUserRoom": listUserRoom,
+        "listPublicRoom": listPublicRoom,
         "getRoom": getRoom
     }
 }

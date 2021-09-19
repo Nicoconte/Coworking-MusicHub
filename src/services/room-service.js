@@ -26,7 +26,7 @@ const RoomService = function() {
             }
         })
 
-        return room?.toJSON()
+        return room;
     }
 
     async function listUserRoomsAsync(userId ) {
@@ -36,15 +36,17 @@ const RoomService = function() {
             }
         })
 
-        return rooms?.toJSON()
+        return rooms;
     }
 
     async function listPublicRoomsAsync() {
-        return await Room.findAll({
+        let publicRooms = await Room.findAll({
             where: {
                 isPublic: true,
             }
-        }).toJSON();
+        })
+
+        return publicRooms;
     }
 
     return {
