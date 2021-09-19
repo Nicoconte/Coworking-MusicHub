@@ -18,7 +18,7 @@ const Application = function() {
     async function beforeStart() {
         setAppConfig();
         
-        await Models.init();
+        //await Models.init();
     }
 
     function start() {

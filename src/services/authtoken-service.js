@@ -1,4 +1,3 @@
-
 const AuthToken = require('../models/authtoken');
 
 const uuid = require('uuid');
@@ -24,9 +23,20 @@ const AuthTokenService = function() {
         return token ? token : null;
     }
 
+    async function validateAsync(tokenKey) {
+        let token = await AuthToken.findOne({
+            where: {
+                key: tokenKey.split(" ")[1]
+            }
+        });
+
+        return token ? token : null;
+    }
+
     return {
         "assignTokenToAsync": assignTokenToAsync,
-        "findTokenByUserIdAsync": findTokenByUserIdAsync
+        "findTokenByUserIdAsync": findTokenByUserIdAsync,
+        "validateAsync": validateAsync
     }
 
 }
