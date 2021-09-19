@@ -40,7 +40,7 @@ const UserService = function () {
             console.log("FindByUsernameAndPassword Error: ", err);
         })
 
-        return user ? user : null;
+        return user ?? null;
     }
 
     return {
