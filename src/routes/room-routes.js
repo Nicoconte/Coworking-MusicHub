@@ -40,6 +40,14 @@ Router.put('/room/:id/update', AuthTokenHeaderValidator, (req, res) => {
     RoomController(req, res).updateRoom();
 })
 
+Router.get("/room/invite-code/:code", AuthTokenHeaderValidator, (req, res) => {
+    RoomController(req, res).getRoomByInviteCode();
+})
+
+Router.delete("/room/:id/participant/:userId/remove", AuthTokenHeaderValidator, (req, res) => {
+    RoomController(req, res).removeParticipant();
+})
+
 const RoomRoutes = Router;
 
 module.exports = RoomRoutes;

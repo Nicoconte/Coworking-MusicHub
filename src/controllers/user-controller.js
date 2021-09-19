@@ -1,6 +1,9 @@
 const UserService = require('../services/user-service');
 const AuthTokenService = require('../services/authtoken-service');
 
+const RESPONSE_MESSAGE = require('../enums/response-message');
+
+
 const UserController = function(req, res) {
     
     const userService = UserService();

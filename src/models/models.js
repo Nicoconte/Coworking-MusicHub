@@ -16,7 +16,7 @@ const Models = function() {
     async function init() {
         User.sync(tableOptions);
         AuthToken.sync(tableOptions);
-        Room.sync({tableOptions});
+        Room.sync(tableOptions);
         RoomParticipant.sync(tableOptions);
     }
 

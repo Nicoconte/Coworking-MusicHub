@@ -144,7 +144,7 @@ const RoomController = function(req, res) {
                 
                 //PRIVATE ROOM
                 if (!room.isPublic) {
-                    if (req.body.password !== room.roomPassword) {
+                    if (req.body.password !== room.password) {
                         return res.send({
                             "status": false,
                             "reason": RESPONSE_MESSAGE.PASSWORD_DOES_NOT_MATCH
@@ -196,7 +196,7 @@ const RoomController = function(req, res) {
                 let roomId = room.id;
                 
                 if (!room.isPublic) {
-                    if (req.body.password !== room.roomPassword) {
+                    if (req.body.password !== room.password) {
                         return res.send({
                             "status": false,
                             "reason": RESPONSE_MESSAGE.PASSWORD_DOES_NOT_MATCH
@@ -304,6 +304,76 @@ const RoomController = function(req, res) {
         })
     }
 
+    async function getRoomByInviteCode() {
+        console.log("HEADER ", req.params)
+        console.log("CODIGO " , req?.params?.code)
+
+        authtokenService.validateAsync(req?.headers?.authorization).then(async token => {
+            if (!token) {
+                return res.send({
+                    "status": false,
+                    "reason": RESPONSE_MESSAGE.INVALID_TOKEN
+                })
+            }
+
+            let room = await roomService.findByInviteCode(req?.params?.code);
+            
+
+            if (!room) {
+                return res.send({
+                    "status": false,
+                    "data": RESPONSE_MESSAGE.ROOM_DOES_NOT_EXIST
+                })                
+            }
+
+            return res.send({
+                "status": false,
+                "data": room
+            })
+
+        }).catch(err => {
+            return res.send({
+                "status": false,
+                "reason": RESPONSE_MESSAGE.UNEXPECTED_ERROR,
+                "innerReason": err.toString()
+            })
+        }) 
+    } 
+
+
+    async function removeParticipant() {
+        authtokenService.validateAsync(req?.headers?.authorization).then(async token => {
+            if (!token) {
+                return res.send({
+                    "status": false,
+                    "reason": RESPONSE_MESSAGE.INVALID_TOKEN
+                })
+            }
+
+            roomService.deleteParticipant(req?.params?.id, req?.params?.userId)
+            .then(r => {
+                if (r) {
+                    return res.send({
+                        "status": true
+                    })
+                }
+            })
+            .catch(err => {
+                return res.send({
+                    "status": false,
+                    "reason": RESPONSE_MESSAGE.CANNOT_DELETE
+                })
+            })
+
+        }).catch(err => {
+            return res.send({
+                "status": false,
+                "reason": RESPONSE_MESSAGE.UNEXPECTED_ERROR,
+                "innerReason": err.toString()
+            })
+        })
+    }
+
     return {
         "getRoom": getRoom,
         "joinRoom": joinRoom,
@@ -313,6 +383,8 @@ const RoomController = function(req, res) {
         "createRoom": createRoom,
         "listUserRoom": listUserRoom,
         "listPublicRoom": listPublicRoom,
+        "removeParticipant": removeParticipant,
+        "getRoomByInviteCode": getRoomByInviteCode
     }
 }
 

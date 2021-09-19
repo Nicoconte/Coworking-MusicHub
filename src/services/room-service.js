@@ -11,7 +11,7 @@ const RoomService = function() {
             name: roomData.name,
             isPublic: roomData.isPublic,
             maxNumberOfParticipants: roomData?.maxNumberOfParticipants,
-            roomPassword: roomData?.password,
+            password: roomData?.password,
             userId: roomData?.userId 
         })
 
@@ -83,7 +83,7 @@ const RoomService = function() {
 
         room.name = roomData?.name ?? room.name;
         room.isPublic = roomData?.isPublic ?? room.isPublic;
-        room.roomPassword = room.isPublic ? null : roomData.password;
+        room.password = room.isPublic ? null : roomData.password;
         room.maxNumberOfParticipants = roomData?.maxNumberOfParticipants ?? room.maxNumberOfParticipants;
         
         let updated = await room.save();
@@ -121,16 +121,39 @@ const RoomService = function() {
         return participant ? true : false 
     }
 
+    async function findByInviteCode(inviteCode) {
+        let room = await Room.findOne({
+            where: {
+                inviteCode: inviteCode
+            }
+        });
+
+        return room ?? null
+    }
+
+    async function deleteParticipant(roomId, userId) {
+        let rows = RoomParticipant.destroy({
+            where: {
+                roomId: roomId,
+                userId: userId
+            }
+        })
+
+        return rows > 0;
+    }
+
     return {
         "createAsync": createAsync,
+        "deleteAsync": deleteAsync,
+        "updateAsync": updateAsync,
         "findByIdAsync": findByIdAsync,
+        "findByInviteCode": findByInviteCode,
+        "deleteParticipant": deleteParticipant,        
         "listUserRoomsAsync": listUserRoomsAsync,
+        "findUserAlreadyExist": findUserAlreadyExist,
         "listPublicRoomsAsync": listPublicRoomsAsync,
         "assignUserToRoomAsync": assignUserToRoomAsync,
-        "getParticipantCountByIdAsync": getParticipantCountByIdAsync,
-        "findUserAlreadyExist": findUserAlreadyExist,
-        "deleteAsync": deleteAsync,
-        "updateAsync": updateAsync 
+        "getParticipantCountByIdAsync": getParticipantCountByIdAsync,         
     }
 
 }

@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/database');
 
+const referralCode = require('referral-codes');
 
 const User = require('./user');
 
@@ -23,9 +24,15 @@ const Room = sequelize.define('room', {
         type: DataTypes.INTEGER,
         defaultValue: 5
     },
-    roomPassword: {
+    password: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    inviteCode: {
+        type: DataTypes.STRING,
+        defaultValue: referralCode.generate({
+            "pattern": "####-####-####"
+        })[0]
     }
 })
 
