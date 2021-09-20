@@ -6,26 +6,24 @@ const SongQueueService = () => {
 
     const queueKey = (roomId) => `queue-${roomId}`;
 
-    let itemsFromQueue = []
+    let currentItemsInQueue = []
 
     function push(roomId, songUrl) {
     
-        itemsFromQueue = []
+        currentItemsInQueue = []
 
         client.lpush(queueKey(roomId), songUrl);
         
         client.lrange(queueKey(roomId), 0, -1, (error, items) => {
             items.forEach(i => {
-                console.log("ITEMS ", items)
-                itemsFromQueue.push(i);
+                currentItemsInQueue.push(i);
             });
         }); 
 
     }
 
     function get() {
-        console.log("A")
-        return itemsFromQueue;
+        return currentItemsInQueue;
     }
 
     return {
