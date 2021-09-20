@@ -4,10 +4,13 @@ const bodyParser = require('body-parser');
 const Models = require('./models/models')();
 const Routes = require('./routes/routes');
 
+const Cron = require('./cron');
+
 const Application = function() {
 
     const PORT = 3000;
     const app = express();
+    const cron = Cron();
 
     function setAppConfig() {
         app.use(bodyParser.json())
@@ -17,7 +20,7 @@ const Application = function() {
     //We can perform any action before the server is up
     async function beforeStart() {
         setAppConfig();
-        
+        cron.destroyAllQueuesAfter24hs();
         //await Models.init();
     }
 
