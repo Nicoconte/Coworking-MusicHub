@@ -1,45 +1,52 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-
 const Models = require('./models/models');
 const Routes = require('./routes/routes');
-
+const Sockets = require('./sockets')
 const Cron = require('./cron');
+
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+const express = require('express');
+const app = express();
 
 const http = require('http');
 const { Server } = require('socket.io');
 
-const Sockets = require('./sockets')
 
 const Application = function() {
 
     const PORT = 3000;
-    const app = express();
     const cron = Cron();
 
-    const server = http.createServer(app)
-    const io = new Server(server);
+    const server = http.createServer(app);
+    
+    const io = new Server(server, {
+        cors: {
+            "origin": "*",
+            "methods": "*" 
+        }
+    });
 
     const socket = Sockets(io);
 
-    function setAppConfig() {
+    //We can perform any action before the server is up
+    async function setupBeforeStart() {
+
         app.use(bodyParser.json())
         app.use(Routes);
-        socket.initEvents();
-    }
-
-    //We can perform any action before the server is up
-    async function beforeStart() {
-        setAppConfig();
+        app.use(cors());
+        
         cron.destroyAllQueuesAfter24hs();
         //await Models().init();
     }
 
-    function start() {
-        beforeStart().then(() => {
-            app.listen(PORT, () => {
-                console.log(`Server is listening at http://localhost:${PORT}`)
-            })
+    async function start() {
+        await setupBeforeStart()
+        
+        socket.initEvents();
+
+        server.listen(PORT, () => {
+            console.log(`Server is listening at http://localhost:${PORT}`)
         })
     }
 

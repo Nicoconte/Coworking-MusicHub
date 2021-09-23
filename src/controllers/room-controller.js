@@ -44,9 +44,7 @@ const RoomController = function(req, res) {
     }
 
     async function listUserRoom() {
-        authtokenService.validateAsync(req.headers.authorization).then(async token => {
-            console.log(token)
-            
+        authtokenService.validateAsync(req.headers.authorization).then(async token => {            
             if (!token) {
                 return res.send({
                     "status": false,
@@ -55,7 +53,6 @@ const RoomController = function(req, res) {
             }
     
             await roomService.listUserRoomsAsync(token.userId).then(rooms => {
-                console.log(rooms);
                 return res.send({
                     "status": true,
                     "data": rooms
@@ -312,9 +309,6 @@ const RoomController = function(req, res) {
     }
 
     async function getRoomByInviteCode() {
-        console.log("HEADER ", req.params)
-        console.log("CODIGO " , req?.params?.code)
-
         authtokenService.validateAsync(req?.headers?.authorization).then(async token => {
             if (!token) {
                 return res.send({
