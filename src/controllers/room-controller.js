@@ -184,6 +184,9 @@ const RoomController = function(req, res) {
 
     async function accessRoom() {
         authtokenService.validateAsync(req?.headers?.authorization).then(async token => {
+
+            const io = app?.req?.get('io');
+
             if (!token) {
                 return res.send({
                     "status": false,
@@ -210,19 +213,23 @@ const RoomController = function(req, res) {
                         })
                     }
                     
-                    return res.send({"tempMessage": "I'm in! (private room)"})
-                    //Socket action
-    
+                    return res.send({
+                        "status": true,
+                        "canEmit": true
+                    });
+
                 } else {
                     if (!await roomService.findUserAlreadyExist(roomId, userId)) {
                         return res.send({
-                            "status": true,
-                            "reason": "No puedo entrar"
+                            "status": false,
+                            "reason": "You're not a member of this room"
                         })
                     }    
-
-                    return res.send({"tempMessage": "I'm in! (public room)"})
-                    //Socket action
+                    
+                    return res.send({
+                        "status": true,
+                        "canEmit": true
+                    });
                 }
             })    
         })
