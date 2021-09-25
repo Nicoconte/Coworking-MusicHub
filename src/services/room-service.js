@@ -2,6 +2,7 @@ const Room = require('../models/room');
 const RoomParticipant = require('../models/room-participant');
 
 const uuid = require('uuid');
+const referralCode = require('referral-codes');
 
 const RoomService = function() {
 
@@ -12,7 +13,10 @@ const RoomService = function() {
             isPublic: roomData.isPublic,
             maxNumberOfParticipants: roomData?.maxNumberOfParticipants,
             password: roomData?.password,
-            userId: roomData?.userId 
+            inviteCode: referralCode.generate({
+                "pattern": "####-####-####"
+            })[0],
+            userId: roomData?.userId
         })
 
         return room;
