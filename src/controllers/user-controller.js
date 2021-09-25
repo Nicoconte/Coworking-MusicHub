@@ -10,6 +10,14 @@ const UserController = function(req, res) {
     const authtokenService = AuthTokenService();
 
     async function register() {
+
+        if (await userService.existsAsync(req?.body?.username)) {
+            return res.send({
+                "status": false,
+                "reason": "Username is already taken. Try another one."
+            })
+        }
+
         userService.createAsync(req?.body).then(async user => {
             if (!user) {
                 return res.send({

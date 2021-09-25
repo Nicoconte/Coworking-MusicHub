@@ -7,7 +7,7 @@ const {
 } = require('../validators/authtoken-validator');
 
 
-Router.post('/room/:id/song/add/', AuthTokenHeaderValidator,(req, res) => {
+Router.post('/api/room/:id/song/add/', AuthTokenHeaderValidator,(req, res) => {
     SongQueueController(req, res).addSongToQueue()
 })
 

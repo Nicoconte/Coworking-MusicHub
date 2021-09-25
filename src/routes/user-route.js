@@ -8,12 +8,12 @@ const {
 } = require('../validators/user-validator')
 
 
-Router.post('/user/register', UserRegisterRequestBodyValidator, (req, res) => {
+Router.post('/api/user/register', UserRegisterRequestBodyValidator, (req, res) => {
     UserController(req, res).register();
 })
 
 
-Router.post('/user/login', UserLoginRequestBodyValidator, (req, res) => {
+Router.post('/api/user/login', UserLoginRequestBodyValidator, (req, res) => {
     UserController(req, res).login()
 })
 

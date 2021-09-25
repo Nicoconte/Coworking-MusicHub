@@ -3,7 +3,7 @@ const Users = require('../models/user')
 const uuid = require('uuid');
 
 const UserService = function () {
-
+    
     async function createAsync(userData) {
         let id = uuid.v4().toString();
 
