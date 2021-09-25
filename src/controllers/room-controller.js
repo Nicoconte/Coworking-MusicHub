@@ -182,8 +182,6 @@ const RoomController = function (req, res) {
     async function accessRoom() {
         authtokenService.validateAsync(req?.headers?.authorization).then(async token => {
 
-            const io = app?.req?.get('io');
-
             if (!token) {
                 return res.send({
                     "status": false,
@@ -191,44 +189,17 @@ const RoomController = function (req, res) {
                 })
             }
 
-            await roomService.findByIdAsync(req?.params?.id).then(async room => {
-                let userId = token.userId;
-                let roomId = room.id;
+            if (!await roomService.findUserAlreadyExist(req?.params?.id, token.userId)) {
+                return res.send({
+                    "status": false,
+                    "reason": RESPONSE_MESSAGE.NOT_ALLOW_TO_ENTER
+                })
+            }
 
-                if (!room.isPublic) {
-                    if (req.body.password !== room.password) {
-                        return res.send({
-                            "status": false,
-                            "reason": RESPONSE_MESSAGE.PASSWORD_DOES_NOT_MATCH
-                        })
-                    }
-
-                    if (!await roomService.findUserAlreadyExist(roomId, userId)) {
-                        return res.send({
-                            "status": true,
-                            "reason": "Yo no estoy dentro de la sala"
-                        })
-                    }
-
-                    return res.send({
-                        "status": true,
-                        "canEmit": true
-                    });
-
-                } else {
-                    if (!await roomService.findUserAlreadyExist(roomId, userId)) {
-                        return res.send({
-                            "status": false,
-                            "reason": "You're not a member of this room"
-                        })
-                    }
-
-                    return res.send({
-                        "status": true,
-                        "canEmit": true
-                    });
-                }
-            })
+            return res.send({
+                "status": true,
+                "canEmit": true
+            });
         })
     }
 

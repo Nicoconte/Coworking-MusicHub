@@ -14,7 +14,8 @@ const RESPONSE_MESSAGE = {
     "USER_ALREADY_EXIST_IN_THE_ROOM": "You already are a member of the room!",
     "ROOM_DOES_NOT_EXIST": "Room does not exist. Create one",
     "CANNOT_DELETE": "Cannot delete",
-    "CANNOT_UPDATE": "Cannot update"
+    "CANNOT_UPDATE": "Cannot update",
+    "NOT_ALLOW_TO_ENTER": "You must join first if you want to be a member of this room"
 }
 
 module.exports = RESPONSE_MESSAGE;
