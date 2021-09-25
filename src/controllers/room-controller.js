@@ -139,6 +139,13 @@ const RoomController = function (req, res) {
                     })
                 }
 
+                if (await roomService.getParticipantCountByIdAsync(roomId) > room.maxNumberOfParticipants) {
+                    return res.send({
+                        "status": false,
+                        "reason": RESPONSE_MESSAGE.NOT_ENOUGH_SPACE
+                    })
+                }                
+
                 //PRIVATE ROOM
                 if (!room.isPublic) {
                     if (req.body.password !== room.password) {
@@ -147,14 +154,7 @@ const RoomController = function (req, res) {
                             "reason": RESPONSE_MESSAGE.PASSWORD_DOES_NOT_MATCH
                         })
                     }
-
-                    if (await roomService.getParticipantCountByIdAsync(roomId) > room.maxNumberOfParticipants) {
-                        return res.send({
-                            "status": false,
-                            "reason": RESPONSE_MESSAGE.NOT_ENOUGH_SPACE
-                        })
-                    }
-
+                    
                     await roomService.assignUserToRoomAsync(roomId, userId).then(_ => {
                         return res.send({
                             "status": true,
