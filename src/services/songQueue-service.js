@@ -22,6 +22,9 @@ const SongQueueService = () => {
     }
 
     function iterateByKey(key) {
+
+        currentItemsInQueue = []
+
         client.lrange(key, 0, -1, (error, items) => {
             items.forEach(i => {
                 currentItemsInQueue.push(i);
@@ -29,10 +32,21 @@ const SongQueueService = () => {
         }); 
     }
 
+    function getQueueById(roomId) {
+        currentItemsInQueue = [];
+
+        client.lrange(queueKey(roomId), 0, -1, (error, items) => {
+            items.forEach(i => {
+                currentItemsInQueue.push(i);
+            });
+        });        
+    }
+
     return {
         "push": push,
         "get": get,
-        "iterateByKey": iterateByKey
+        "iterateByKey": iterateByKey,
+        "getQueueById": getQueueById
     }
 }
 
