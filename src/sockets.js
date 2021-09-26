@@ -5,13 +5,13 @@ const Sockets = function (io) {
     const client = redisClient;
 
     function initEvents() {
-        console.log("Hello, world!");
-
         io.on('connection', (socket) => {
 
-            console.log(`Connected! Socket ID:${socket.id}`);
-
-            socket.on('song-queue-update', (data) => {
+            socket.on('access-room', (roomId) => {
+                socket.join(roomId);
+            });
+            
+            socket.on('update-song-queue', (data) => {
                 
                 let roomId = data.roomId;
 
@@ -23,27 +23,24 @@ const Sockets = function (io) {
                     items.forEach(i => {
                         queue.push(i);
                     });
-                    console.log("Queue Updated from Server ", queue);
-                    io.to(roomId).emit('get-updated-queue', queue);
+                    console.log(`Sending to Room ${roomId}`)
+                    io.to(roomId).emit('retrieve-queue-for-all', queue);
                 });
 
             });
 
-            socket.on('access-room', (roomId) => {
-                socket.join(roomId);
-            });
-
-            socket.on('request-queue', (roomId) => {
+            socket.on('request-queue-client', (roomId) => {
                 let queue = []
                 
                 client.lrange(`queue-${roomId}`, 0, -1, (error, items) => {
                     items.forEach(i => {
                         queue.push(i);
                     });
-                    console.log(`Queue from Server to Room ${roomId} `, queue);
-                    io.to(roomId).emit('get-updated-queue', queue);
-                });                
+                    console.log(`Sending to Client: ${socket.id}`)
+                    io.to(socket.id).emit('retrieve-queue-client', queue);
+                });               
             })
+
         })
     }
 
