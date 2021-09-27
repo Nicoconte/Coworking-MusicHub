@@ -1,5 +1,5 @@
 {
-  "name": "coworking-musichub-server",
+  "name": "musichub-server",
   "version": "1.0.0",
   "description": "",
   "main": "./server.js",
